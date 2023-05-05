@@ -14,11 +14,6 @@ type CatData = {
   // Add any other properties you want to include from the Cool Cats NFT API response
 };
 
-type ApiResponse = {
-  cat: CatData | null;
-  error?: string;
-};
-
 async function getCat(id: string) {
     let response = await fetch("https://api.coolcatsnft.com/cat/" + id)
     const data: CatData = await response.json();
@@ -49,11 +44,11 @@ async function callGPT(id1: string, id2: string) {
     const openai = new OpenAIApi(configuration);
     let catMsg = await getCat(id1)
     let wolfMsg = await getWolf(id2)
-    let prompt = "Write a 175 word story about a shadow wolf that can teleport through portals vs a cool cat that has these attributes \n "
+    let prompt = "Write a 150 word short story about a shadow wolf that can teleport through portals vs a cool cat that has these attributes \n "
      + catMsg + " The wolf has these attributes \n" + wolfMsg
     const options = {
-        temperature: 0.8,
-        max_tokens: 300,
+        //temperature: 0.8,
+        max_tokens: 250,
         n: 1,
     };
     const response = await openai.createCompletion({

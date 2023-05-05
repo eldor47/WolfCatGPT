@@ -9,10 +9,10 @@ const configuration = new Configuration({
 });
 
 async function getCat(id: string) {
-    var res = await axios.get("https://api.coolcatsnft.com/cat/" + id)
-    var attributes = res.data.attributes
+    let res = await axios.get("https://api.coolcatsnft.com/cat/" + id)
+    let attributes = res.data.attributes
     attributes.pop()
-    var msg = ``
+    let msg = ``
     attributes.map((a: { trait_type: string; value: string; }) => {
         msg += "It's " + a.trait_type + " is " + a.value + ", "
     })
@@ -21,10 +21,10 @@ async function getCat(id: string) {
 }
 
 async function getWolf(id: string) {
-    var res = await axios.get("https://s3.amazonaws.com/metadata.coolcatsnft.com/library/wolf/metadata/" + id)
-    var attributes = res.data.attributes
+    let res = await axios.get("https://s3.amazonaws.com/metadata.coolcatsnft.com/library/wolf/metadata/" + id)
+    let attributes = res.data.attributes
     attributes.pop()
-    var msg = ``
+    let msg = ``
     attributes.map((a: { trait_type: string; value: string; }) => {
         msg += "It's " + a.trait_type + " is " + a.value + ", "
     })
@@ -34,9 +34,9 @@ async function getWolf(id: string) {
 
 async function callGPT(id1: string, id2: string) {
     const openai = new OpenAIApi(configuration);
-    var catMsg = await getCat(id1)
-    var wolfMsg = await getWolf(id2)
-    var prompt = "Write a 175 word story about a shadow wolf that can teleport through portals vs a cool cat that has these attributes \n "
+    let catMsg = await getCat(id1)
+    let wolfMsg = await getWolf(id2)
+    let prompt = "Write a 175 word story about a shadow wolf that can teleport through portals vs a cool cat that has these attributes \n "
      + catMsg + " The wolf has these attributes \n" + wolfMsg
     const options = {
         temperature: 0.8,
@@ -68,7 +68,7 @@ interface RequestBody {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<MessageResponse>) {
   if (req.method === 'POST') {
     const { id1, id2 } = req.body as RequestBody;
-    var message = await callGPT(id1, id2);
+    let message = await callGPT(id1, id2);
     const data: MessageResponse = { message: message ? message : ""};
     res.status(200).json(data);
   } else {

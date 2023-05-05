@@ -1,6 +1,5 @@
 // pages/api/data.js
 import { Configuration, OpenAIApi } from "openai";
-import axios from "axios";
 
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -8,9 +7,22 @@ const configuration = new Configuration({
   apiKey: process.env.APIKEY,
 });
 
+type CatData = {
+  id: number;
+  name: string;
+  attributes: any;
+  // Add any other properties you want to include from the Cool Cats NFT API response
+};
+
+type ApiResponse = {
+  cat: CatData | null;
+  error?: string;
+};
+
 async function getCat(id: string) {
-    let res = await axios.get("https://api.coolcatsnft.com/cat/" + id)
-    let attributes = res.data.attributes
+    let response = await fetch("https://api.coolcatsnft.com/cat/" + id)
+    const data: CatData = await response.json();
+    let attributes = data.attributes
     attributes.pop()
     let msg = ``
     attributes.map((a: { trait_type: string; value: string; }) => {
@@ -21,8 +33,9 @@ async function getCat(id: string) {
 }
 
 async function getWolf(id: string) {
-    let res = await axios.get("https://s3.amazonaws.com/metadata.coolcatsnft.com/library/wolf/metadata/" + id)
-    let attributes = res.data.attributes
+    let response = await fetch("https://s3.amazonaws.com/metadata.coolcatsnft.com/library/wolf/metadata/" + id)
+    const data: CatData = await response.json();
+    let attributes = data.attributes
     attributes.pop()
     let msg = ``
     attributes.map((a: { trait_type: string; value: string; }) => {

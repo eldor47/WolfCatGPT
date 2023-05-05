@@ -49,10 +49,11 @@ async function callGPT(id1: string, id2: string) {
       ...options
     });
 
-    console.log(prompt)
-    console.log(response.data.choices[0].text)
-
-    return response.data.choices[0].text ?? ""
+    if(response.data.choices[0]) {
+      return response.data.choices[0].text
+    } else {
+      return "Error generating story... :("
+    }
 }
 
 interface MessageResponse {
@@ -68,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (req.method === 'POST') {
     const { id1, id2 } = req.body as RequestBody;
     var message = await callGPT(id1, id2);
-    const data: MessageResponse = { message };
+    const data: MessageResponse = { message: message ? message : ""};
     res.status(200).json(data);
   } else {
     res.status(405).json({ message: 'Method not allowed' });
